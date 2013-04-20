@@ -7,7 +7,7 @@ block = require('node-block').block
 #Rel = require 'rel'
 #pics = new Rel.Table 'mp_gallery'
 
-conn = mysql.createConnection('mysql://root:19990906c@127.0.0.1:3306/moefou')
+conn = mysql.createConnection('mysql://root:password@127.0.0.1:3306/moefou')
 
 fetch = (cur_page,conn,_cb)->
 	async.waterfall([

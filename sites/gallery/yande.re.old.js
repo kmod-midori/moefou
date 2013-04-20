@@ -14,7 +14,7 @@ mysql = require('mysql');
 
 block = require('node-block').block;
 
-conn = mysql.createConnection('mysql://root:19990906c@127.0.0.1:3306/moefou');
+conn = mysql.createConnection('mysql://root:password@127.0.0.1:3306/moefou');
 
 fetch = function(cur_page, conn, _cb) {
   return async.waterfall([
