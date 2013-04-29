@@ -1,5 +1,5 @@
 {
-    "name": "Moefou Directional Spider",
+    "name": "moefou_spider",
     "description": "[NULL]",
     "version": "0.0.1",
     "contributors": [
@@ -17,11 +17,12 @@
         }
     ],
     "dependencies": {
-        "dnode": "1.0.x",
-        "jsdom": "0.6.x",
+        "dnode": "",
+        "jsdom": "",
         "mysql": "",
-        "shred": "0.8.x",
-        "underscore": "1.4.x"
+        "request": "",
+        "underscore": "",
+        "asyncblock":""
     },
     "bugs": {
         "web": "https://github.com/chengyuhui/moefou/issues"
