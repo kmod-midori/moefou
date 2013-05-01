@@ -37,3 +37,7 @@ exports.start = function(cb) {
 };
 
 exports.start();
+
+connection;
+
+exports.start();

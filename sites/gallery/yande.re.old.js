@@ -137,3 +137,8 @@ fetch(1, conn, function(err) {
   console.dir(arguments);
   return console.log('Completed.');
 });
+
+fetch(1, conn, function(err) {
+  console.dir(arguments);
+  return console.log('Completed.');
+});

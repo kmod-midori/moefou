@@ -124,3 +124,10 @@ fetch(1,conn,(err)->
 	console.log('Completed.')
 	#conn.end()
 )
+
+
+fetch(1,conn,(err)->
+	console.dir(arguments)
+	console.log('Completed.')
+	#conn.end()
+)
