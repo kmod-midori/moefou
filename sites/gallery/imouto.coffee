@@ -5,7 +5,10 @@ equal = assert.equal
 mysql = require 'mysql'
 _ = require 'underscore'
 gate = require 'gate'
-dnode = require 'dnode'
+l = require('tracer').colorConsole({
+	format:'imouto[{{title}}] {{timestamp}} {{message}}'
+	dateformat:'yyyy-mm-dd H:MM:ss'
+})
 
 
 
@@ -13,7 +16,7 @@ dnode = require 'dnode'
 conn = mysql.createConnection 'mysql://root:19990906c@127.0.0.1:3306/moefou'
 
 
-fetch = (callback)->
+fetch = (page,callback)->
 	stats = {}
 	next flow =
 		error: (err)->
@@ -21,10 +24,10 @@ fetch = (callback)->
 				callback err
 		start: ->
 			request({
-				url:'https://yande.re/pot.json'
+				url:'https://yande.re/post.json'
 				qs:
 					limit:30
-					page:1
+					page:page
 			},@next)
 
 		check_exist: (err,rep)->
@@ -110,6 +113,7 @@ fetch = (callback)->
 			g = gate.create()
 			sql = 'INSERT INTO `mp_tags` (`tag_chn_name`,`tag_eng_name`,`tag_jpn_name`,`tag_modified`) VALUES (?,?,?,?)'
 			for tag in need_insert
+				console.dir tag
 				conn.query(sql,[
 					''
 					tag.name
@@ -151,18 +155,16 @@ fetch = (callback)->
 
 
 
-		success:(err)->
+		success:()->
 			process.nextTick ->
-				conn.end()
-				if stats
-					callback null,stats
-				else
-					callback err
+				callback null,stats
 
 
 
-server = dnode({fetch})
-server.listen 2333
 
 
+
+fetch 10,(err,stat)->
+
+	conn.end()
 

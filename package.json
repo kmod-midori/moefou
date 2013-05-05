@@ -25,8 +25,7 @@
         "nextflow":"",
         "gate":"",
         "require-all":"",
-        "tracer":"",
-        "timeplan":""
+        "tracer":""
     },
     "bugs": {
         "web": "https://github.com/chengyuhui/moefou/issues"
