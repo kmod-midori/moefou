@@ -22,9 +22,10 @@
         "request": "",
         "underscore": "",
         "mysql":"",
-        "async":"",
-        "invoke":"",
-        "require-all":""
+        "nextflow":"",
+        "gate":"",
+        "require-all":"",
+        "tracer":""
     },
     "bugs": {
         "web": "https://github.com/chengyuhui/moefou/issues"
