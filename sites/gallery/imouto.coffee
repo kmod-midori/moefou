@@ -20,7 +20,8 @@ fetch = (page,callback)->
 	stats = {}
 	next flow =
 		error: (err)->
-			l.error JSON.stringify err
+			process.nextTick ->
+				callback err
 		start: ->
 			request({
 				url:'https://yande.re/post.json'
@@ -47,6 +48,8 @@ fetch = (page,callback)->
 			items = _.filter items,(item)->not item.data[0]?
 			items = for item in items
 				item.item
+
+			stats.items_inserted = 0
 			if items.length is 0
 				@success(null,stats)
 				return
@@ -83,7 +86,7 @@ fetch = (page,callback)->
 		query_tags:(err,result)->
 			items = _.map result,(item)->
 				_.extend(item.item,{row:item.result.insertId})
-
+			stats.items_inserted = items.length
 			_tags = {}
 			for item in items
 				for tag in item.tags
@@ -102,19 +105,66 @@ fetch = (page,callback)->
 
 			g.await @next
 
+		insert_tags:(err,tags)->
+			already = _.filter(tags,(tag)->tag.data[0]?.tag_id?)
+			need_insert = _.filter(tags,(tag)->not tag.data[0]?.tag_id?)
+			need_insert = _.map(need_insert,(tag)->tag.tag)
+			stats.tags_affected = need_insert.length
+			g = gate.create()
+			sql = 'INSERT INTO `mp_tags` (`tag_chn_name`,`tag_eng_name`,`tag_jpn_name`,`tag_modified`) VALUES (?,?,?,?)'
+			for tag in need_insert
+				console.dir tag
+				conn.query(sql,[
+					''
+					tag.name
+					''
+					Math.round(new Date().getTime()/1000)
+				],g.latch({result:1,row:g.val(tag.rows)}))
+
+			g.await((err,results)=>
+				if err
+					@error err
+					return
+				results = _.map results,(data)->{id:data.result.insertId,row:data.row}
+				for tag in already
+					results.push {id:tag.data[0].tag_id,row:tag.tag.rows}
+				@next(null,results)
+			)
+
+
+		insert_ref:(err,tags)->
+			g = gate.create()
+			sql = '''
+						INSERT INTO `mp_tags_gallery` (`tr_object_id`,`tr_object_type`,`tr_tag_id`, `tr_uid`,`tr_tag_type`)
+						VALUES (?,'',?,0,1)
+						'''
+
+
+			for tag in tags
+				for row in tag.row
+					conn.query(sql,[row,tag.id],g.latch({result:1}))
+
+			g.await @next
 
 
 
 
-		success:callback
 
 
 
 
 
 
-fetch 10,->
-	console.dir arguments
-	conn.query 'TRUNCATE `mp_gallery`',->
-		conn.end()
+		success:()->
+			process.nextTick ->
+				callback null,stats
+
+
+
+
+
+
+fetch 10,(err,stat)->
+
+	conn.end()
 
