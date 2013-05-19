@@ -17,15 +17,15 @@
         }
     ],
     "dependencies": {
-        "dnode": "",
         "jsdom": "",
         "request": "",
         "underscore": "",
         "mysql":"",
         "nextflow":"",
         "gate":"",
-        "require-all":"",
-        "tracer":""
+        "tracer":"",
+        "config":"",
+        "timeplan":""
     },
     "bugs": {
         "web": "https://github.com/chengyuhui/moefou/issues"

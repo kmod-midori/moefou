@@ -5,18 +5,12 @@ equal = assert.equal
 mysql = require 'mysql'
 _ = require 'underscore'
 gate = require 'gate'
-l = require('tracer').colorConsole({
-	format:'imouto[{{title}}] {{timestamp}} {{message}}'
-	dateformat:'yyyy-mm-dd H:MM:ss'
-})
 
 
 
 
-conn = mysql.createConnection 'mysql://root:19990906c@127.0.0.1:3306/moefou'
-
-
-fetch = (page,callback)->
+module.exports = (callback)->
+	conn = mysql.createConnection 'mysql://root:19990906c@127.0.0.1:3306/moefou'
 	stats = {}
 	next flow =
 		error: (err)->
@@ -27,7 +21,7 @@ fetch = (page,callback)->
 				url:'https://yande.re/post.json'
 				qs:
 					limit:30
-					page:page
+					page:1
 			},@next)
 
 		check_exist: (err,rep)->
@@ -95,7 +89,6 @@ fetch = (page,callback)->
 			tags = for key,val of _tags
 				{name:key,rows:val}
 
-			console.dir tags
 
 			g = gate.create()
 
@@ -113,7 +106,6 @@ fetch = (page,callback)->
 			g = gate.create()
 			sql = 'INSERT INTO `mp_tags` (`tag_chn_name`,`tag_eng_name`,`tag_jpn_name`,`tag_modified`) VALUES (?,?,?,?)'
 			for tag in need_insert
-				console.dir tag
 				conn.query(sql,[
 					''
 					tag.name
@@ -146,25 +138,12 @@ fetch = (page,callback)->
 
 			g.await @next
 
-
-
-
-
-
-
-
-
-
 		success:()->
 			process.nextTick ->
-				callback null,stats
+				conn.end()
+				if stats
+					callback null,stats
+				else
+					callback err
 
-
-
-
-
-
-fetch 10,(err,stat)->
-
-	conn.end()
 

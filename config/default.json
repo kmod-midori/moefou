@@ -1,0 +1,16 @@
+{
+    "srvs":[
+        {
+            "name":"konachan",
+            "file":"gallery/konachan.js",
+            "period":"5m",
+            "enabled":true
+        },
+        {
+            "name":"imouto",
+            "file":"gallery/imouto.js",
+            "period":"6m",
+            "enabled":true
+        }
+    ]
+}
